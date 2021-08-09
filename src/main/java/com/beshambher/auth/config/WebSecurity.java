@@ -21,9 +21,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
 			.oauth2Login(
 				o -> o.failureHandler((request, response, exception) -> {
+					System.err.println(exception.getLocalizedMessage());
 				    request.getSession().setAttribute("error.message", exception.getMessage());
 				    // handler.onAuthenticationFailure(request, response, exception);
 	            })
+				.defaultSuccessUrl("/oauth2/login/success")
 		    );
 	}
 
