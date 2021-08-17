@@ -13,11 +13,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
+		 	.csrf().disable()
 			.authorizeRequests(
 				a -> a.antMatchers("/", "/error", "/webjars/**")
 				.permitAll().anyRequest().authenticated()
 			)
-			.logout(l -> l.logoutSuccessUrl("/").permitAll())
 			.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
 			.oauth2Login(
 				o -> o.failureHandler((request, response, exception) -> {
@@ -26,6 +26,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				    // handler.onAuthenticationFailure(request, response, exception);
 	            })
 				.defaultSuccessUrl("/oauth2/login/success")
+		    )
+			.logout(l -> l
+		            .logoutSuccessUrl("/oauth2/login/success").permitAll()
+		            .deleteCookies("JSESSIONID")
+		            .invalidateHttpSession(true)
 		    );
 	}
 
