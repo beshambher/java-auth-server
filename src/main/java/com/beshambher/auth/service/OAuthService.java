@@ -7,6 +7,6 @@ import com.beshambher.auth.model.SessionUser;
 
 public interface OAuthService {
 
-	public SessionUser postLogin(Model model, OAuth2AuthenticationToken authentication);
+	public SessionUser postLogin(OAuth2AuthenticationToken authentication);
 
 }

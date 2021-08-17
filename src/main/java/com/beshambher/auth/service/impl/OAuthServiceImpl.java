@@ -23,8 +23,8 @@ public class OAuthServiceImpl implements OAuthService {
 	@Autowired
 	private OAuth2AuthorizedClientService authorizedClientService;
 
-	public SessionUser postLogin(Model model, OAuth2AuthenticationToken authentication) {
-		 OAuth2AuthorizedClient client = authorizedClientService
+	public SessionUser postLogin(OAuth2AuthenticationToken authentication) {
+		OAuth2AuthorizedClient client = authorizedClientService
 			      .loadAuthorizedClient(
 			        authentication.getAuthorizedClientRegistrationId(), 
 			          authentication.getName());
@@ -39,13 +39,7 @@ public class OAuthServiceImpl implements OAuthService {
 	     ResponseEntity<Map> response = restTemplate
 	      .exchange(userInfoEndpointUri, HttpMethod.GET, entity, Map.class);
 	     
-		 return getSessionUser(response.getBody());
-	}
-	
-	private SessionUser getSessionUser(Map<String, String> userData) {
-		String avatar = userData.getOrDefault("avatar_url", "") + userData.getOrDefault("picture", "");
-		SessionUser user = new SessionUser(avatar, userData.get("email"), userData.get("name"));
-		return user;
+		 return new SessionUser(response.getBody());
 	}
 
 }
